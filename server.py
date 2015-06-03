@@ -5,7 +5,7 @@ import socket
 import struct
 import logging
 
-from exception import (NotRecognizeProtocolException, NotImplementedException)
+from exception import NotRecognizeProtocolException
 
 
 loop = asyncio.get_event_loop()
@@ -97,7 +97,7 @@ class Server(asyncio.Protocol):
             elif cmd == self.CMD_BIND:
                 pass
             else:
-                raise NotImplementedException("Not implement {} yet!".format(cmd))
+                raise NotImplementedError("Not implement {} yet!".format(cmd))
 
         elif self.stage == self.STAGE_WORK:
             logging.debug("send data with length {}".format(len(data)))
@@ -175,4 +175,5 @@ class Server(asyncio.Protocol):
 
             self.stage = self.STAGE_INIT
         else:
-            raise NotImplementedException('Not implement other auth method yet!')
+            raise NotImplementedError('Not implement other auth method yet!')
+
