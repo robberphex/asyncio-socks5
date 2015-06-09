@@ -31,12 +31,19 @@ def handle_echo(reader, writer):
         method = METHOD_NOAUTH
 
     data_s = b'\05' + method
-    print(writer)
-    yield from writer.write(data_s)
+    writer.write(data_s)
     if method == METHOD_USER:
-        data = yield reader.read(2)
+        data = yield from reader.read(2)
         ver, ulen = struct.unpack('!BB', data)
-        print(ver, ulen)
+        if var != 5:
+            raise NotRecognizeProtocolException('Cannot recognize the protocol!')
+        data = yield from reader.read(ulen)
+        user = data.decode()
+        data = yield from reader.read(1)
+        plen = struct.unpack('!B', data)[0]
+        data = yield from reader.read(plen)
+        password = data.decode()
+        print(user, password)
 
     writer.close()
 
